@@ -7,11 +7,20 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Launch Program",
+            "name": "Launch Hello World",
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${file}"
+            "program": "${workspaceFolder}/src/index.ts"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch Three",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "program": "${workspaceFolder}/src/three_example.ts"
         }
     ]
 }
