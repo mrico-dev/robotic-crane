@@ -1,19 +1,14 @@
 {
   "compilerOptions": {
-    /* Language and Environment */
-    "target": "ES6",                                  /* Set the JavaScript language version for emitted JavaScript and include compatible library declarations. */
-    "allowJs": true,
-    "resolveJsonModule": true,
-
-    /* Modules */
-    "module": "ESNext",                                /* Specify what module code is generated. */
-    "moduleResolution": "node",
-    "esModuleInterop": true,                             /* Emit additional JavaScript to ease support for importing CommonJS modules. This enables 'allowSyntheticDefaultImports' for type compatibility. */
-    "forceConsistentCasingInFileNames": true,            /* Ensure that casing is correct in imports. */
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "strict": true,
+    "jsx": "react-jsx", // Use this if you're using React
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
     "outDir": "out/",
-
-    /* Type Checking */
-    "strict": true,                                      /* Enable all strict type-checking options. */
-    "skipLibCheck": true                                 /* Skip type checking all .d.ts files. */
+    "typeRoots": ["node_modules/@types", "src/types"]
   }
 }
