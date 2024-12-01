@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import * as BACKEND from './backend_interface';
 
 // Constants (should be loaded from a config file idealy)
 // values are in meters (m)
@@ -133,7 +134,7 @@ const forearmGripAxisLine: THREE.Line = new THREE.Line(forearmGripAxisGeometry, 
 scene.add(forearmGripAxisLine);
 
 function refreshAxis(): void {
-armForearmPivot.getWorldPosition(armForearmPivotWorldPos);
+  armForearmPivot.getWorldPosition(armForearmPivotWorldPos);
   armForearmAxisLine.geometry.attributes.position.setXYZ(0, armForearmPivotWorldPos.x, MIN_CANVAS_HEIGHT, armForearmPivotWorldPos.z);
   armForearmAxisLine.geometry.attributes.position.setXYZ(1, armForearmPivotWorldPos.x, MAX_CANVAS_HEIGHT, armForearmPivotWorldPos.z);
   armForearmAxisLine.geometry.attributes.position.needsUpdate = true;
@@ -231,3 +232,5 @@ function animate(): void {
 }
 
 animate();
+BACKEND.initialize_connection();
+BACKEND.setup_button();
