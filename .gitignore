@@ -1,0 +1,3 @@
+frontend/out/*
+frontend/node-modules/
+frontend/package-lock.json
