@@ -1,3 +1,6 @@
 frontend/out/*
 frontend/node-modules/
 frontend/package-lock.json
+.vscode
+frontend/.vscode
+backend/.vscode
