@@ -1,8 +1,34 @@
+import * as VISUALIZER from './visualizer';
+
 // Ideally, these should be stored in a configuration file
 const WEBSOCKET_PORT: string = "8080";
 const WEBSOCKET_URL: string = "ws://localhost";
 
 var socket: WebSocket;
+
+interface backend_message {
+    liftHeight: number,
+    liftArmAngleDegree: number,        
+    armForearmAngleDegree: number, 
+    forearmGripAngleDegree: number,
+    gripperSpacing: number,
+}
+
+function messageHandler(event: any): void {
+    const jsonData = event.data;
+    console.log('Message from server:', jsonData);
+
+    var data = JSON.parse(jsonData) as backend_message;
+    set_crane_position(data);
+}
+
+function set_crane_position(position: backend_message): void {
+    VISUALIZER.setLiftHeight(position.liftHeight);
+    VISUALIZER.setLiftArmAngle(position.liftArmAngleDegree);
+    VISUALIZER.setArmForearmAngle(position.armForearmAngleDegree);
+    VISUALIZER.setForearmGripAngle(position.forearmGripAngleDegree);
+    VISUALIZER.setGripperSpacing(position.gripperSpacing);
+}
 
 export function setup_button(): void {
     document.getElementById("message-send")?.addEventListener("click", () => {
@@ -19,9 +45,7 @@ export function initialize_connection(): void {
         console.log("Connected.");
     });
 
-    socket.addEventListener('message', (event) => {
-        console.log('Message from server:', event.data);
-    });
+    socket.addEventListener('message', messageHandler);
 
     socket.addEventListener('close', () => {
         console.log('Connection closed.');
