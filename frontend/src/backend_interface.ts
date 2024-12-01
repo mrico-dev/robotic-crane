@@ -6,7 +6,7 @@ const WEBSOCKET_URL: string = "ws://localhost";
 
 var socket: WebSocket;
 
-interface backend_message {
+interface BackendMessage {
     liftHeight: number,
     liftArmAngleDegree: number,        
     armForearmAngleDegree: number, 
@@ -18,16 +18,20 @@ function messageHandler(event: any): void {
     const jsonData = event.data;
     console.log('Message from server:', jsonData);
 
-    var data = JSON.parse(jsonData) as backend_message;
-    set_crane_position(data);
+    try {
+        var data = JSON.parse(jsonData) as BackendMessage;
+        set_crane_position(data);
+    } catch (error) {
+        console.error("Could not parse data received from backend: ", error);
+    }
 }
 
-function set_crane_position(position: backend_message): void {
-    VISUALIZER.setLiftHeight(position.liftHeight);
+function set_crane_position(position: BackendMessage): void {
+    VISUALIZER.setLiftHeight(position.liftHeight / 1000);
     VISUALIZER.setLiftArmAngle(position.liftArmAngleDegree);
     VISUALIZER.setArmForearmAngle(position.armForearmAngleDegree);
     VISUALIZER.setForearmGripAngle(position.forearmGripAngleDegree);
-    VISUALIZER.setGripperSpacing(position.gripperSpacing);
+    VISUALIZER.setGripperSpacing(position.gripperSpacing / 1000);
 }
 
 export function setup_button(): void {
