@@ -9,19 +9,22 @@
 
 namespace frontend {
 
-class WebsocketConnection {
+class WebsocketServer {
 public:
     using server_t = websocketpp::server<websocketpp::config::asio>;
 
-    WebsocketConnection(uint16_t port);
+    WebsocketServer(uint16_t port);
 
     void set_message_handler(std::function<void(const std::string&)> message_handler);
+
+    void send_all(const std::string& data);
 
     void run();
 
 private:
     server_t server_;
     std::function<void(const std::string&)> message_handler_;
+    std::vector<websocketpp::connection_hdl> clients_;
 };
 
 }
