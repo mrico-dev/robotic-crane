@@ -6,9 +6,16 @@
 
 namespace frontend {
 
+WebsocketServer* WebsocketServer::instance_ = nullptr;
+
 using server_t = WebsocketServer::server_t;
 
 WebsocketServer::WebsocketServer(uint16_t port) {
+    if (instance_ != nullptr) {
+        throw std::runtime_error("Could not create WebsocketServer: an instance already exists.");
+    }
+    instance_ = this;
+
     // Set logging settings
     server_.set_access_channels(websocketpp::log::alevel::all);
     server_.clear_access_channels(websocketpp::log::alevel::frame_payload);
@@ -17,18 +24,17 @@ WebsocketServer::WebsocketServer(uint16_t port) {
     server_.set_open_handler([this](websocketpp::connection_hdl hdl){
         clients_.push_back(hdl);
     });
-    /*server_.set_close_handler([this](websocketpp::connection_hdl hdl){
-        clients_.erase(std::remove(clients_.begin(), clients_.end(), hdl), clients_.end());
-    });*/
 
     std::cout << "Listening on port " << port << "..." << std::endl;
+    server_.set_reuse_addr(true);
     server_.listen(port);
     server_.start_accept();
-
 
     message_handler_ = [](const std::string&){
         throw std::runtime_error("Websocket error: A message was received but no message handler was set.");
     };
+
+    std::signal(SIGINT, stop_instance);
 }
 
 void WebsocketServer::set_message_handler(std::function<void(const std::string&)> message_handler) {
@@ -51,6 +57,15 @@ void WebsocketServer::send_all(const std::string& data) {
 void WebsocketServer::run() {
     auto thread = std::thread([this](){server_.run();});
     thread.detach();
+}
+
+void WebsocketServer::stop_instance(int signal) {
+    if (instance_ != nullptr) {
+        std::cout << "Received signal " << signal << ", shuting down server..." << std::endl;
+        instance_->server_.stop_listening();
+        instance_->server_.stop();
+        exit(signal);
+    }
 }
 
 }

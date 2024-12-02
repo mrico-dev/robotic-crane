@@ -22,9 +22,13 @@ public:
     void run();
 
 private:
+    static void stop_instance(int signal);
+
     server_t server_;
     std::function<void(const std::string&)> message_handler_;
     std::vector<websocketpp::connection_hdl> clients_;
+
+    static WebsocketServer* instance_;
 };
 
 }
