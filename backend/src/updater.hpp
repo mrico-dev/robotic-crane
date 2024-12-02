@@ -16,7 +16,7 @@ public:
 private:
     std::string make_json(const simulation::Crane& crane);
 
-    void set_crane_target(const std::string& msg);
+    void handle_crane_target_msg(const std::string& msg);
 
     frontend::WebsocketServer& server_;
     simulation::CraneSimulator simulator_;

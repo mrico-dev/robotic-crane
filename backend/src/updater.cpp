@@ -5,7 +5,9 @@
 Updater::Updater(frontend::WebsocketServer& server):
     server_(server),
     simulator_(simulation::Crane::default_crane(), simulation::default_crane_movement_config),
-    planner_(simulation::default_crane_shape_config) {}
+    planner_(simulation::default_crane_shape_config) {
+        server_.set_message_handler(&handle_crane_target_msg);
+    }
 
 void Updater::loop_send_positions() {
     simulation::Crane crane(8'000, 90, -90, 20, 100);
@@ -47,8 +49,10 @@ Json::Value parse_json(const std::string &msg) {
     return root;
 }
 
-void Updater::set_crane_target(const std::string &msg) {
+void Updater::handle_crane_target_msg(const std::string &msg) {
     auto values = parse_json(msg);
+
+    std::cout << "Received message: " << msg << std::endl;
 
     const auto x = values["x"].asFloat();
     const auto y = values["y"].asFloat();
