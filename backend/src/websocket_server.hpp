@@ -27,6 +27,7 @@ private:
     server_t server_;
     std::function<void(const std::string&)> message_handler_;
     std::vector<websocketpp::connection_hdl> clients_;
+    std::thread server_thread_;
 
     static WebsocketServer* instance_;
 };

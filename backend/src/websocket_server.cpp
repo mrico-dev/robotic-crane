@@ -55,8 +55,7 @@ void WebsocketServer::send_all(const std::string& data) {
 }
 
 void WebsocketServer::run() {
-    auto thread = std::thread([this](){server_.run();});
-    thread.detach();
+    server_thread_ = std::thread([this](){server_.run();});
 }
 
 void WebsocketServer::stop_instance(int signal) {

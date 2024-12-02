@@ -2,12 +2,12 @@
 
 namespace simulation {
     
-CraneSimulator::CraneSimulator(const crane& intial_state, const crane_config& crane_config):
+CraneSimulator::CraneSimulator(const Crane& intial_state, const CraneMovementConfig& crane_config):
     crane_(intial_state),
     goal_crane_(intial_state),
     crane_config_(crane_config) {}
 
-const crane &CraneSimulator::get_state() const {
+const Crane &CraneSimulator::get_state() const {
     return crane_;
 }
 
@@ -62,7 +62,7 @@ void CraneSimulator::simulate_next_step(int64_t elapsed_time) {
                      seconds_elapsed);
 }
 
-void CraneSimulator::set_goal_state(const crane &goal_crane) {
+void CraneSimulator::set_goal_state(const Crane &goal_crane) {
     // TODO Normalize angles so that we don't rotate 659 degrees to from 659 to 0
     goal_crane_ = goal_crane;
 }
