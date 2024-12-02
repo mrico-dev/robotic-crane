@@ -10,7 +10,7 @@ public:
     void loop_send_positions();
 
 private:
-    std::string make_json(const robotics::crane& crane);
+    std::string make_json(const simulation::crane& crane);
 
     frontend::WebsocketServer& server_;
 };

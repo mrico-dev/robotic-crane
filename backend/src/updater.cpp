@@ -5,7 +5,7 @@ static constexpr int64_t MESSAGE_RATE_NANOS = 10'000'000; // 10 millis
 Updater::Updater(frontend::WebsocketServer& server): server_(server) {}
 
 void Updater::loop_send_positions() {
-    robotics::crane crane(8, 90, -90, 20, .1);
+    simulation::crane crane(8'000, 90, -90, 20, 100);
     while (true) {
         auto time_begin = std::chrono::system_clock::now().time_since_epoch().count();
 
@@ -20,12 +20,12 @@ void Updater::loop_send_positions() {
     }
 }
 
-std::string Updater::make_json(const robotics::crane& crane) {
+std::string Updater::make_json(const simulation::crane& crane) {
     // Note: some libraries could save us the trouble but this is fine
     return "{\"liftHeight\": " + std::to_string(crane.lift_elevation_) +
             ",\"liftArmAngleDegree\": " + std::to_string(crane.swing_rotation_) +
             ",\"armForearmAngleDegree\": " + std::to_string(crane.elbow_rotation_) +
             ",\"forearmGripAngleDegree\": " + std::to_string(crane.wrist_rotation_) +
-            ",\"gripperSpacing\": " + std::to_string(crane.grip_extenstion_) +
+            ",\"gripperSpacing\": " + std::to_string(crane.grip_extension_) +
             "}";
 }
