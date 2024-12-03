@@ -8,27 +8,14 @@
   </head>
   <body>
     <div id="control-div">
-      <h2>Manual control</h2>
-      <div class="control-group">
-        <label for="lift-height">Lift Height (m):</label>
-        <input type="number" id="lift-height" value="5" step=".1" />
-      </div>
-      <div class="control-group">
-        <label for="lift-arm-angle">Lift-Arm Angle (deg):</label>
-        <input type="number" id="lift-arm-angle" value="0" step="5" />
-      </div>
-      <div class="control-group">
-        <label for="arm-forearm-angle">Arm-Forearm Angle (deg):</label>
-        <input type="number" id="arm-forearm-angle" value="0" step="5" />
-      </div>
-      <div class="control-group">
-        <label for="forearm-grip-angle">Forearm-grip Angle (deg):</label>
-        <input type="number" id="forearm-grip-angle" value="0" step="5" />
-      </div>
-      <div class="control-group">
-        <label for="gripper-spacing">Gripper spacing (m):</label>
-        <input type="number" id="gripper-spacing" value=".5" step=".1" />
-      </div>
+        <h2>Send instruction (in meters):</h2>
+        <label for="x-coord">x</label>
+        <input type="number" id="x-coord" value="5" step=".1" />
+        <label for="y-coord">y</label>
+        <input type="number" id="y-coord" value="5" step=".1" />
+        <label for="z-coord">z</label>
+        <input type="number" id="z-coord" value="5" step=".1" />
+
         <button id="message-send">Send message</button>
     </div>
     <div id="canvas-div">

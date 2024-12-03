@@ -14,6 +14,12 @@ interface BackendMessage {
     gripperSpacing: number,
 }
 
+interface FrontendMessage {
+    x: number,
+    y: number,
+    z: number,
+}
+
 function messageHandler(event: any): void {
     const jsonData = event.data;
     console.log('Message from server:', jsonData);
@@ -35,9 +41,19 @@ function set_crane_position(position: BackendMessage): void {
 }
 
 export function setup_button(): void {
+    const xInput: HTMLInputElement = document.getElementById('x-coord') as HTMLInputElement;
+    const yInput: HTMLInputElement = document.getElementById('y-coord') as HTMLInputElement;
+    const zInput: HTMLInputElement = document.getElementById('z-coord') as HTMLInputElement;
+
     document.getElementById("message-send")?.addEventListener("click", () => {
-        console.log("Sending message");
-        socket.send(JSON.stringify("Hello this is frontend."));
+        const x_mm: number = parseFloat(xInput.value) * 1000;
+        const y_mm: number = parseFloat(yInput.value) * 1000;
+        const z_mm: number = parseFloat(zInput.value) * 1000;
+        const message: FrontendMessage = {x: x_mm, y: y_mm, z: z_mm};
+
+        const json: string = JSON.stringify(message);
+        console.log("Sending message: ", json);
+        socket.send(json);
     });
 }
 

@@ -213,38 +213,6 @@ window.addEventListener('resize', (): void => {
   renderer.setSize(window.innerWidth / 100 * CANVAS_WIDTH_RATIO_PERCENT, window.innerHeight);
 });
 
-// Input listeners
-const liftHeightInput: HTMLInputElement = document.getElementById('lift-height') as HTMLInputElement;
-const liftArmAngleInput: HTMLInputElement = document.getElementById('lift-arm-angle') as HTMLInputElement;
-const armForearmAngleInput: HTMLInputElement = document.getElementById('arm-forearm-angle') as HTMLInputElement;
-const forearmGripAngleInput: HTMLInputElement = document.getElementById('forearm-grip-angle') as HTMLInputElement;
-const gripSpacingInput: HTMLInputElement = document.getElementById('gripper-spacing') as HTMLInputElement;
-
-liftHeightInput.addEventListener('input', (event: Event) => {
-  const newLiftHeight = parseFloat((event.target as HTMLInputElement).value);
-  setLiftHeight(newLiftHeight);
-});
-
-liftArmAngleInput.addEventListener('input', (event: Event) => {
-  const newLiftArmAngle = parseFloat((event.target as HTMLInputElement).value);
-  setLiftArmAngle(newLiftArmAngle);
-});
-
-armForearmAngleInput.addEventListener('input', (event: Event) => {
-  const newArmForearmAngle = parseFloat((event.target as HTMLInputElement).value);
-  setArmForearmAngle(newArmForearmAngle);
-});
-
-forearmGripAngleInput.addEventListener('input', (event: Event) => {
-  const newArmGripAngle = parseFloat((event.target as HTMLInputElement).value);
-  setForearmGripAngle(newArmGripAngle);
-});
-
-gripSpacingInput.addEventListener('input', (event: Event) => {
-  const newGripSpacing = parseFloat((event.target as HTMLInputElement).value);
-  setGripperSpacing(newGripSpacing);
-});
-
 // Main function
 export function animate(): void {
   requestAnimationFrame(animate);
