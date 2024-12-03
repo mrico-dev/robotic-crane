@@ -6,7 +6,9 @@ Updater::Updater(frontend::WebsocketServer& server):
     server_(server),
     simulator_(simulation::Crane::default_crane(), simulation::default_crane_movement_config),
     planner_(simulation::default_crane_shape_config) {
-        server_.set_message_handler(&handle_crane_target_msg);
+        auto callback = std::bind(&Updater::handle_crane_target_msg, this, std::placeholders::_1);
+        server_.set_message_handler(callback);
+        std::cout << "New message handler was set!" << std::endl;
     }
 
 void Updater::loop_send_positions() {
@@ -16,7 +18,10 @@ void Updater::loop_send_positions() {
     while (true) {
         auto time_begin = std::chrono::system_clock::now().time_since_epoch().count();
 
-        simulator_.simulate_next_step(std::max(duration, MESSAGE_RATE_NANOS));
+        {
+            auto lock = std::lock_guard<std::mutex>(mutex_);
+            simulator_.simulate_next_step(std::max(duration, MESSAGE_RATE_NANOS));
+        }
         server_.send_all(make_json(simulator_.get_state()));
 
         auto time_end = std::chrono::system_clock::now().time_since_epoch().count();
@@ -50,9 +55,8 @@ Json::Value parse_json(const std::string &msg) {
 }
 
 void Updater::handle_crane_target_msg(const std::string &msg) {
-    auto values = parse_json(msg);
-
     std::cout << "Received message: " << msg << std::endl;
+    auto values = parse_json(msg);
 
     const auto x = values["x"].asFloat();
     const auto y = values["y"].asFloat();
@@ -60,6 +64,14 @@ void Updater::handle_crane_target_msg(const std::string &msg) {
 
     const auto position = simulation::EulerPosition{x, y, z};
     const auto goal_crane = planner_.get_target_crane(position);
+    std::cout << "GOAL CRANE IS: " << goal_crane.lift_elevation_ 
+              << " | " << goal_crane.swing_rotation_ 
+              << " | " << goal_crane.elbow_rotation_
+              << " | " << goal_crane.wrist_rotation_
+              << " | " << goal_crane.grip_extension_ << std::endl;
 
-    simulator_.set_goal_state(goal_crane);
+    {
+        auto lock = std::lock_guard<std::mutex>(mutex_);
+        simulator_.set_goal_state(goal_crane);
+    }
 }

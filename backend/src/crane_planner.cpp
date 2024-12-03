@@ -1,6 +1,7 @@
 #include "crane_planner.hpp"
 
 #include <cmath>
+#include <iostream>
 
 namespace simulation
 {
@@ -13,10 +14,11 @@ namespace simulation
         const auto triangle_length = polar_pos.radius_ - config_.wrist_length_;
 
         if (config_.arm_length_ + config_.forearm_length_ < triangle_length) {
+            std::cerr << "Requested position is too far away from the crane. Going back to default position instead." << std::endl;
             return Crane::default_crane();
         }
         if (polar_pos.radius_ < std::abs(config_.arm_length_ - config_.forearm_length_)) {
-            // TODO edge case
+            std::cerr << "Requested position is too close to the crane. Going back to default position instead." << std::endl;
             return Crane::default_crane();
         }
 

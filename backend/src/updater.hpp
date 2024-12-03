@@ -6,7 +6,7 @@
 #include "crane_planner.hpp"
 
 class Updater {
-    static constexpr int64_t MESSAGE_RATE_NANOS = 1'000'000'000;
+    static constexpr int64_t MESSAGE_RATE_NANOS = 50'000'000;
 
 public:
     Updater(frontend::WebsocketServer& server);
@@ -18,6 +18,7 @@ private:
 
     void handle_crane_target_msg(const std::string& msg);
 
+    std::mutex mutex_;
     frontend::WebsocketServer& server_;
     simulation::CraneSimulator simulator_;
     simulation::CranePlanner planner_;

@@ -8,7 +8,11 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 message(STATUS "C++ Standard: ${CMAKE_CXX_STANDARD}")
 
-# Find (required by WebSocket++)
+# Include JsonCPP
+#add_library(jsoncpp STATIC "./external/jsoncpp/dist/")
+#target_include_directories(jsoncpp PUBLIC "./external/jsoncpp/dist/")
+
+# Find BOOST (required by WebSocket++)
 find_package(Boost REQUIRED system)
 include_directories(${Boost_INCLUDE_DIRS})
 
@@ -19,7 +23,7 @@ if (NOT WEBSOCKETPP_INCLUDE_DIR)
 endif()
 
 # Include libs
-include_directories(external/jsoncpp/include)
+include_directories(external/jsoncpp/dist)
 include_directories(${WEBSOCKETPP_INCLUDE_DIR})
 include_directories(${Boost_INCLUDE_DIRS})
 
@@ -27,4 +31,4 @@ file(GLOB_RECURSE SOURCES "src/*.cpp")
 add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS})
 
 # Link Boost libraries
-target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES} jsoncpp)
