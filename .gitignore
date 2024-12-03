@@ -1,6 +1,11 @@
 frontend/out/*
 frontend/node-modules/
+node-modules/
 frontend/package-lock.json
+.gitmodules
+backend/build
+
+*.o
 .vscode
 frontend/.vscode
 backend/.vscode
