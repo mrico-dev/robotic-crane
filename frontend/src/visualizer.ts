@@ -98,7 +98,7 @@ export function build_scene(): void {
   armForearmPivot.position.set(ARM_LENGTH / 2, 0, 0);
   arm.add(armForearmPivot);
 
-  const forearmGeometry: THREE.BoxGeometry = new THREE.BoxGeometry(FOREARM_LENGTH, FOREARM_WIDTH, FOREARM_WIDTH);
+  const forearmGeometry: THREE.BoxGeometry = new THREE.BoxGeometry(FOREARM_LENGTH, FOREARM_WIDTH / 2, FOREARM_WIDTH);
   const forearmMaterial: THREE.MeshPhongMaterial = new THREE.MeshPhongMaterial({ color: 0x0000ff });
   forearm = new THREE.Mesh(forearmGeometry, forearmMaterial);
   forearm.position.x = FOREARM_LENGTH / 2;

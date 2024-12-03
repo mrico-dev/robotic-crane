@@ -10,6 +10,7 @@ static bool equal(float a, float b, float epsilon=1e-5f) {
 }
 
 struct Crane {
+    Crane() = default;
     Crane(float lift_elevation, float swing_rotation, float elbow_rotation, float wrist_rotation, float grip_extension):
     lift_elevation_(lift_elevation),
     swing_rotation_(swing_rotation),
@@ -23,6 +24,12 @@ struct Crane {
             && equal(elbow_rotation_, other.elbow_rotation_)
             && equal(wrist_rotation_, other.wrist_rotation_)
             && equal(grip_extension_, other.grip_extension_);
+    }
+
+    void normalize_angle() {
+        swing_rotation_ = std::fmod(swing_rotation_, 360);
+        elbow_rotation_ = std::fmod(elbow_rotation_, 360);
+        wrist_rotation_ = std::fmod(wrist_rotation_, 360);
     }
 
     float lift_elevation_;  // milimeters

@@ -14,10 +14,20 @@ interface BackendMessage {
     gripperSpacing: number,
 }
 
-interface FrontendMessage {
+interface CoordFrontendMessage {
+    type: string,
     x: number,
     y: number,
     z: number,
+}
+
+interface CraneFrontendMessage {
+    type: string,
+    lift_elevation: number,
+    swing_rotation: number,
+    elbow_rotation: number,
+    wrist_rotation: number,
+    grip_extension: number,
 }
 
 function messageHandler(event: any): void {
@@ -41,15 +51,42 @@ function set_crane_position(position: BackendMessage): void {
 }
 
 export function setup_button(): void {
+    // Send crane
+    const liftHeightInput: HTMLInputElement = document.getElementById('lift-height') as HTMLInputElement;
+    const swingAngleInput: HTMLInputElement = document.getElementById('swing-angle') as HTMLInputElement;
+    const elbowAngleInput: HTMLInputElement = document.getElementById('elbow-angle') as HTMLInputElement;
+    const wristAngleInput: HTMLInputElement = document.getElementById('wrist-angle') as HTMLInputElement;
+    const gripExtensionInput: HTMLInputElement = document.getElementById('grip-extension') as HTMLInputElement;
+
+    document.getElementById("crane-send")?.addEventListener("click", () => {
+        const liftHeight = parseFloat(liftHeightInput.value);
+        const swingAngle = parseFloat(swingAngleInput.value);
+        const elbowAngle = parseFloat(elbowAngleInput.value);
+        const wristAngle = parseFloat(wristAngleInput.value);
+        const gripExtension = parseFloat(gripExtensionInput.value);
+
+        const message: CraneFrontendMessage = {type: "crane",
+            lift_elevation: liftHeight,
+            swing_rotation: swingAngle,
+            elbow_rotation: elbowAngle,
+            wrist_rotation: wristAngle,
+            grip_extension: gripExtension};
+        
+        const json: string = JSON.stringify(message);
+        console.log("Sending message: ", json);
+        socket.send(json);
+    });
+
+    // Send coords
     const xInput: HTMLInputElement = document.getElementById('x-coord') as HTMLInputElement;
     const yInput: HTMLInputElement = document.getElementById('y-coord') as HTMLInputElement;
     const zInput: HTMLInputElement = document.getElementById('z-coord') as HTMLInputElement;
 
-    document.getElementById("message-send")?.addEventListener("click", () => {
+    document.getElementById("coord-send")?.addEventListener("click", () => {
         const x_mm: number = parseFloat(xInput.value) * 1000;
         const y_mm: number = parseFloat(yInput.value) * 1000;
         const z_mm: number = parseFloat(zInput.value) * 1000;
-        const message: FrontendMessage = {x: x_mm, y: y_mm, z: z_mm};
+        const message: CoordFrontendMessage = {type: "coord", x: x_mm, y: y_mm, z: z_mm};
 
         const json: string = JSON.stringify(message);
         console.log("Sending message: ", json);

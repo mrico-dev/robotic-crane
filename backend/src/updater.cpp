@@ -56,20 +56,41 @@ Json::Value parse_json(const std::string &msg) {
 
 void Updater::handle_crane_target_msg(const std::string &msg) {
     std::cout << "Received message: " << msg << std::endl;
-    auto values = parse_json(msg);
+    simulation::Crane goal_crane = simulation::Crane();
 
-    const auto x = values["x"].asFloat();
-    const auto y = values["y"].asFloat();
-    const auto z = values["z"].asFloat();
+    try {
+        auto values = parse_json(msg);
+        if (values["type"].asString() == "coord") {
+            const auto x = values["x"].asFloat();
+            const auto y = values["y"].asFloat();
+            const auto z = values["z"].asFloat();
 
-    const auto position = simulation::EulerPosition{x, y, z};
-    const auto goal_crane = planner_.get_target_crane(position);
+            const auto position = simulation::EulerPosition{x, y, z};
+            goal_crane = planner_.get_target_crane(position);
+
+        } else if (values["type"].asString() == "crane") {
+            const auto lift_height = values["lift_elevation"].asFloat();
+            const auto swing_roation = values["swing_rotation"].asFloat();
+            const auto elbow_rotation = values["elbow_rotation"].asFloat();
+            const auto wrist_rotation = values["wrist_rotation"].asFloat();
+            const auto grip_extension = values["grip_extension"].asFloat();
+
+            goal_crane = simulation::Crane(lift_height, swing_roation, elbow_rotation, wrist_rotation, grip_extension);
+
+        } else {
+            throw std::runtime_error("Received message with unknown type: '" + values["type"].asString() + "'");
+        }
+    } catch (std::exception& e) {
+        throw std::runtime_error("Received message which is malformed or missing elements: " + std::string(e.what()) + ". Message is '" + msg + "'");
+    }
+
     std::cout << "GOAL CRANE IS: " << goal_crane.lift_elevation_ 
-              << " | " << goal_crane.swing_rotation_ 
-              << " | " << goal_crane.elbow_rotation_
-              << " | " << goal_crane.wrist_rotation_
-              << " | " << goal_crane.grip_extension_ << std::endl;
+            << " | " << goal_crane.swing_rotation_ 
+            << " | " << goal_crane.elbow_rotation_
+            << " | " << goal_crane.wrist_rotation_
+            << " | " << goal_crane.grip_extension_ << std::endl;
 
+    goal_crane.normalize_angle();
     {
         auto lock = std::lock_guard<std::mutex>(mutex_);
         simulator_.set_goal_state(goal_crane);

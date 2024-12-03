@@ -24,6 +24,9 @@ void CraneSimulator::simulate_element(float& position, float goal_position, floa
             }
             position = std::max(position + speed * seconds_elapsed, goal_position);
         }
+    } else {
+        speed = 0;
+        position = goal_position;
     }
 }
 

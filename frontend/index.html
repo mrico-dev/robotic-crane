@@ -9,14 +9,30 @@
   <body>
     <div id="control-div">
         <h2>Send instruction (in meters):</h2>
-        <label for="x-coord">x</label>
-        <input type="number" id="x-coord" value="5" step=".1" />
-        <label for="y-coord">y</label>
-        <input type="number" id="y-coord" value="5" step=".1" />
-        <label for="z-coord">z</label>
-        <input type="number" id="z-coord" value="5" step=".1" />
 
-        <button id="message-send">Send message</button>
+        <h3>Send crane configuration</h3>
+        <label for="x-coord">Lift height (mm)</label>
+        <input type="number" id="lift-height" value="5000" step=".1" />
+        <label for="x-coord">Swing angle (deg)</label>
+        <input type="number" id="swing-angle" value="0" step=".1" />
+        <label for="x-coord">Elbow angle (deg)</label>
+        <input type="number" id="elbow-angle" value="0" step=".1" />
+        <label for="x-coord">Wrist angle (deg)</label>
+        <input type="number" id="wrist-angle" value="0" step=".1" />
+        <label for="x-coord">Gripper extension (mm)</label>
+        <input type="number" id="grip-extension" value="500" step=".1" />
+
+        <button id="crane-send">Send</button>
+
+        <h3>Send Cartesian coordinates</h3>
+        <label for="x-coord">x</label> <br>
+        <input type="number" id="x-coord" value="5" step=".1" /> <br>
+        <label for="y-coord">y</label> <br>
+        <input type="number" id="y-coord" value="5" step=".1" /> <br>
+        <label for="z-coord">z</label> <br>
+        <input type="number" id="z-coord" value="5" step=".1" /> <br>
+
+        <button id="coord-send">Send</button>
     </div>
     <div id="canvas-div">
       <canvas id="three-canvas"></canvas>
