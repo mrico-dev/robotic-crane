@@ -83,9 +83,14 @@ export function setup_button(): void {
     const zInput: HTMLInputElement = document.getElementById('z-coord') as HTMLInputElement;
 
     document.getElementById("coord-send")?.addEventListener("click", () => {
-        const x_mm: number = parseFloat(xInput.value) * 1000;
-        const y_mm: number = parseFloat(yInput.value) * 1000;
-        const z_mm: number = parseFloat(zInput.value) * 1000;
+        const x: number = parseFloat(xInput.value);
+        const y: number = parseFloat(yInput.value);
+        const z: number = parseFloat(zInput.value);
+        VISUALIZER.setGoalPoint(x, y, z);
+
+        const x_mm: number = x * 1000;
+        const y_mm: number = y * 1000;
+        const z_mm: number = z * 1000;
         const message: CoordFrontendMessage = {type: "coord", x: x_mm, y: y_mm, z: z_mm};
 
         const json: string = JSON.stringify(message);

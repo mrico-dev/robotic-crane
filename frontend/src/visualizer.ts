@@ -23,6 +23,8 @@ const GRIPPER_WIDTH: number = .05;
 const GRIPPER_LENGTH: number = .5;
 const GRIPPER_HEIGHT: number = .1;
 
+const GOAL_POINT_SIZE = .1;
+
 // Canvas takes N% of the screen's width
 const MAX_CANVAS_HEIGHT: number = 20;
 const MIN_CANVAS_HEIGHT: number = 0;
@@ -45,6 +47,8 @@ var gripRight: THREE.Mesh;
 
 var armForearmAxisLine: THREE.Line;
 var forearmGripAxisLine: THREE.Line;
+
+var goalPoint: THREE.Points;
 
 export function build_scene(): void {
   scene = new THREE.Scene();
@@ -151,6 +155,15 @@ export function build_scene(): void {
   forearmGripAxisLine = new THREE.Line(forearmGripAxisGeometry, new THREE.LineBasicMaterial({ color: 0x00ff00 }));
   scene.add(forearmGripAxisLine);
 
+  const goalPointGeometry = new THREE.BufferGeometry();
+  const goalPointInitialPos = new Float32Array([0, 0, 0]);
+  goalPointGeometry.setAttribute('position', new THREE.BufferAttribute(goalPointInitialPos, 3));
+  goalPoint = new THREE.Points(goalPointGeometry, new THREE.PointsMaterial({
+    color: 0xff0000,
+    size: GOAL_POINT_SIZE,
+  }))
+  scene.add(goalPoint);
+
   // Controls
   controls = new OrbitControls(camera, renderer.domElement);
   controls.enableDamping = true;
@@ -205,6 +218,13 @@ export function setGripperSpacing(newGripperSpacing : number): void {
   gripLeft.position.z = -newGripperSpacing / 2;
   gripRight.position.z = newGripperSpacing / 2;
   base.updateMatrixWorld();
+}
+
+export function setGoalPoint(x: number, y: number, z: number): void {
+  goalPoint.position.x = x;
+  goalPoint.position.y = y;
+  goalPoint.position.z = z;
+  goalPoint.updateMatrixWorld();
 }
 
 window.addEventListener('resize', (): void => {
