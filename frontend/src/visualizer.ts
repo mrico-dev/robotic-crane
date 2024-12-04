@@ -9,11 +9,11 @@ const BASE_WIDTH: number = 2;
 const LIFT_HEIGHT: number = 10;
 const LIFT_WIDTH: number = 1;
 
-const ARM_LENGTH: number = 8;
+const ARM_LENGTH: number = 6;
 const ARM_WIDTH: number = 1;
 
 const ARM_FOREARM_SPACING_Y: number = 1;
-const FOREARM_LENGTH: number = 2;
+const FOREARM_LENGTH: number = 4;
 const FOREARM_WIDTH: number = .8;
 
 const FOREARM_GRIP_SPACING_Y: number = .3;

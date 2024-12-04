@@ -96,13 +96,13 @@ static constexpr simulation::CraneMovementConfig default_crane_movement_config =
                                                                                 10, 2};
 
 static constexpr simulation::CraneShapeConfig default_crane_shape_config = simulation::CraneShapeConfig{
-                                                                                1000,
-                                                                                10000,
-                                                                                8000,
-                                                                                1000,
-                                                                                2000,
-                                                                                300,
-                                                                                700
+                                                                                1000,  // base height
+                                                                                10000, // lift_height
+                                                                                6000,  // arm_length
+                                                                                1000,  // elbow_y
+                                                                                4000,  // foream_length
+                                                                                300,   // wrist_y 
+                                                                                700    // wrist_length
                                                                                 };
 
 } // namespace robotics
