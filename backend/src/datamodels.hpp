@@ -76,7 +76,7 @@ struct CraneShapeConfig {
     float wrist_length_;
 };
 
-struct EulerPosition {
+struct Position {
     float x_;
     float y_;
     float z_;
@@ -85,7 +85,7 @@ struct EulerPosition {
 struct PolarPosition {
     float radius_;
     float angle_;
-    float z_;
+    float y_;
 };
 
 static constexpr simulation::CraneMovementConfig default_crane_movement_config = simulation::CraneMovementConfig{

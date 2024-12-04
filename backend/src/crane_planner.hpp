@@ -8,10 +8,10 @@ class CranePlanner {
 public:
     CranePlanner(const CraneShapeConfig& config);
 
-    Crane get_target_crane(const EulerPosition& pos);
+    Crane get_target_crane(const Position& pos);
 
 private:
-    PolarPosition get_polar_coords(const EulerPosition& pos);
+    PolarPosition get_polar_coords(const Position& pos);
 
     float rad_to_degrees(float rad);
 

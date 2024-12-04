@@ -65,7 +65,7 @@ void Updater::handle_crane_target_msg(const std::string &msg) {
             const auto y = values["y"].asFloat();
             const auto z = values["z"].asFloat();
 
-            const auto position = simulation::EulerPosition{x, y, z};
+            const auto position = simulation::Position{x, y, z};
             goal_crane = planner_.get_target_crane(position);
 
         } else if (values["type"].asString() == "crane") {

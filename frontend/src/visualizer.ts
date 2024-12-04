@@ -84,6 +84,7 @@ export function build_scene(): void {
   const baseGeometry: THREE.CylinderGeometry = new THREE.CylinderGeometry(BASE_WIDTH, BASE_WIDTH, BASE_HEIGHT, 32);
   const baseMaterial: THREE.MeshPhongMaterial = new THREE.MeshPhongMaterial({ color: 0x555555 });
   base = new THREE.Mesh(baseGeometry, baseMaterial);
+  base.position.y = BASE_HEIGHT / 2;
   scene.add(base);
 
   const liftGeometry: THREE.BoxGeometry = new THREE.BoxGeometry(LIFT_WIDTH, LIFT_HEIGHT, LIFT_WIDTH);
@@ -95,7 +96,7 @@ export function build_scene(): void {
   const armGeometry: THREE.BoxGeometry = new THREE.BoxGeometry(ARM_LENGTH, ARM_WIDTH, ARM_WIDTH);
   const armMaterial: THREE.MeshPhongMaterial = new THREE.MeshPhongMaterial({ color: 0xff0000 });
   arm = new THREE.Mesh(armGeometry, armMaterial);
-  arm.position.x = ARM_LENGTH / 2 + ARM_WIDTH / 2;
+  arm.position.x = ARM_LENGTH / 2;
   lift.add(arm);
 
   armForearmPivot = new THREE.Object3D();
@@ -190,8 +191,8 @@ function degToRad(val: number): number {
 }
 
 export function setLiftHeight(newLiftHeight: number): void {
-  var newLiftHeightClipped = Math.min(Math.max(newLiftHeight, BASE_HEIGHT), LIFT_HEIGHT);
-  var liftHeightRelative: number = newLiftHeightClipped - LIFT_HEIGHT / 2; 
+  var newLiftHeightClipped = Math.min(Math.max(newLiftHeight, ARM_WIDTH / 2), LIFT_HEIGHT);
+  var liftHeightRelative: number = newLiftHeightClipped - LIFT_HEIGHT / 2 - ARM_WIDTH / 2; 
   arm.position.y = liftHeightRelative;
   base.updateMatrixWorld();
 }
@@ -223,7 +224,7 @@ export function setGripperSpacing(newGripperSpacing : number): void {
 export function setGoalPoint(x: number, y: number, z: number): void {
   goalPoint.position.x = x;
   goalPoint.position.y = y;
-  goalPoint.position.z = z;
+  goalPoint.position.z = -z;
   goalPoint.updateMatrixWorld();
 }
 
