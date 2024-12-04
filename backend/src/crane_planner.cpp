@@ -30,14 +30,12 @@ namespace simulation
         const auto a = config_.arm_length_;
         const auto b = config_.forearm_length_;
         const auto c = triangle_length;
-        std::cout << "radius: " << polar_pos.radius_ << ", angle: " << rad_to_degrees(polar_pos.angle_) << ", wrist_length: " << config_.wrist_length_ << std::endl;
-        std::cout << "a: " << a << ", b: " << b << ", c: " << c << std::endl;
-        // Using c^2 = a^2 + b^2 - 2ab cos(^ba)  =>  cos(^ba) = (a^2 + b^2 - c^2) / 2ab   
+
+        // Using c^2 = a^2 + b^2 - 2ab cos(^ba)  =>  cos(^ba) = (a^2 + b^2 - c^2) / 2ab (Law of cosines)
         const auto swing_angle = std::acos((a * a + c * c - b * b) / (2 * a * c));
         const auto elbow_rotation = -PI + std::acos((a * a + b * b - c * c) / (2 * a * b));
         const auto wrist_rotation = -swing_angle - elbow_rotation;
         const auto swing_rotation = swing_angle + polar_pos.angle_;
-        std::cout << "swing: " << rad_to_degrees(swing_angle) << ", elbow: " << rad_to_degrees(elbow_rotation) << ", wrist: " << rad_to_degrees(wrist_rotation) << ", totalswing: " << rad_to_degrees(swing_rotation) << std::endl;
 
         auto grip = 200.f;
 
