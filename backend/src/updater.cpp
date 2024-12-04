@@ -8,7 +8,6 @@ Updater::Updater(frontend::WebsocketServer& server):
     planner_(simulation::default_crane_shape_config) {
         auto callback = std::bind(&Updater::handle_crane_target_msg, this, std::placeholders::_1);
         server_.set_message_handler(callback);
-        std::cout << "New message handler was set!" << std::endl;
     }
 
 void Updater::loop_send_positions() {
