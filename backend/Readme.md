@@ -1,13 +1,29 @@
+# Set-up
 
-`sudo apt install libboost-all-dev`
-`sudo apt install libwebsocketpp-dev`
-`sudo apt-get install libasio-dev`
-`cd external/jsoncpp/; python3 amalgate.py`
-
+## Dependencies (for debian)
 ```
-mkdir build && cd build
-cmake ..
+sudo apt-get install cmake
+sudo apt install libboost-all-de
+sudo apt install libwebsocketpp-dev
+sudo apt-get install libasio-dev
+```
+
+## Compile project
+```
+cmake -B build
+cd build/
 make
 ```
 
-`./websocket_json_client`
+If the linker cannot find jsoncpp libraries, you may need to initialize them:
+```
+# From ./backend/
+cd external/jsoncpp/
+python3 amalgate.py
+```
+then run the first step again.
+
+## Run the server
+```
+./crane-backend
+```
