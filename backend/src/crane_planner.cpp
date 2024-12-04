@@ -17,7 +17,7 @@ namespace simulation
             std::cerr << "Requested position is too far away from the crane. Going back to default position instead." << std::endl;
             return Crane::default_crane();
         }
-        if (polar_pos.radius_ < std::abs(config_.arm_length_ - config_.forearm_length_)) {
+        if (triangle_length < std::abs(config_.arm_length_ - config_.forearm_length_)) {
             std::cerr << "Requested position is too close to the crane. Going back to default position instead." << std::endl;
             return Crane::default_crane();
         }
@@ -37,7 +37,7 @@ namespace simulation
         const auto wrist_rotation = -swing_angle - elbow_rotation;
         const auto swing_rotation = swing_angle + polar_pos.angle_;
 
-        auto grip = 200.f;
+        auto grip = 150.f;
 
         return Crane{lift, rad_to_degrees(swing_rotation), rad_to_degrees(elbow_rotation), rad_to_degrees(wrist_rotation), grip};
     }
