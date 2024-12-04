@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-project(monumental-backend)
+project(crane-backend)
 
 # Enable C++17 standard (Websocket++ does not support cpp23)
 set(CMAKE_CXX_STANDARD 17)
