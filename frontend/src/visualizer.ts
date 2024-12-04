@@ -86,6 +86,11 @@ export function build_scene(): void {
   base = new THREE.Mesh(baseGeometry, baseMaterial);
   base.position.y = BASE_HEIGHT / 2;
   scene.add(base);
+  const zeroDegBaseIndicatorGeometry: THREE.BoxGeometry = new THREE.BoxGeometry(BASE_WIDTH / 1.5, BASE_WIDTH / 5, BASE_HEIGHT / 10); 
+  const zeroDegBaseIndicator = new THREE.Mesh(zeroDegBaseIndicatorGeometry, new THREE.MeshPhongMaterial({ color: 0x990000 }));
+  zeroDegBaseIndicator.position.x = BASE_WIDTH / 2;
+  zeroDegBaseIndicator.position.y = BASE_HEIGHT / 2;
+  base.add(zeroDegBaseIndicator);
 
   const liftGeometry: THREE.BoxGeometry = new THREE.BoxGeometry(LIFT_WIDTH, LIFT_HEIGHT, LIFT_WIDTH);
   const liftMaterial: THREE.MeshPhongMaterial = new THREE.MeshPhongMaterial({ color: 0x777777 });
