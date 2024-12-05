@@ -10,7 +10,9 @@ namespace simulation
     CranePlanner::CranePlanner(const CraneShapeConfig &config): config_(config), crane_position_{0, 0, 0, 0} {}
 
     Crane simulation::CranePlanner::get_target_crane(const Position& pos) {
-        auto relative_pos = Position{pos.x_ - crane_position_.x_, pos.y_ - crane_position_.y_, pos.z_ - crane_position_.z_};
+        auto relative_pos = Position{pos.x_ - crane_position_.x_,
+                                     pos.y_ - crane_position_.y_,
+                                     pos.z_ - crane_position_.z_};
         const auto polar_pos = get_polar_coords(relative_pos);
         const auto triangle_length = polar_pos.radius_ - config_.wrist_length_;
 
