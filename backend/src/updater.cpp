@@ -22,13 +22,14 @@ void Updater::loop_send_positions() {
             auto lock = std::lock_guard<std::mutex>(mutex_);
             simulator_.simulate_next_step(std::max(duration, MESSAGE_RATE_NANOS));
         }
-        auto crane_pos = crane_position_sensor_.get_crane_position();
+        auto crane_pos = crane_position_sensor_.get_next_crane_position(static_cast<double>(duration) / SECOND_IN_NANOS);
         server_.send_all(make_json(simulator_.get_state(), crane_pos));
 
         auto time_end = std::chrono::system_clock::now().time_since_epoch().count();
         duration = time_end - time_begin;
         if (duration < MESSAGE_RATE_NANOS) {
             std::this_thread::sleep_for(std::chrono::nanoseconds(MESSAGE_RATE_NANOS - duration));
+            duration = MESSAGE_RATE_NANOS;
         }
     }
 }
@@ -82,6 +83,15 @@ void Updater::handle_crane_target_msg(const std::string &msg) {
 
             goal_crane = simulation::Crane(lift_height, swing_roation, elbow_rotation, wrist_rotation, grip_extension);
 
+        } else if (values["type"].asString() == "4dof-speed") {
+            const auto crane_speed_x = values["speed_x"].asFloat();
+            const auto crane_speed_y = values["speed_y"].asFloat();
+            const auto crane_speed_z = values["speed_z"].asFloat();
+            const auto crane_rot_speed_y = values["speed_rot_y"].asFloat();
+
+            const auto crane_speed = simulation::CraneSpeed{crane_speed_x, crane_speed_y, crane_speed_z, crane_rot_speed_y};            
+            crane_position_sensor_.set_crane_speed(crane_speed);
+            return;
         } else {
             throw std::runtime_error("Received message with unknown type: '" + values["type"].asString() + "'");
         }

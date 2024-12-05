@@ -8,7 +8,7 @@
   </head>
   <body>
     <div id="control-div">
-        <h1>Send instruction (in meters):</h1>
+        <h1>Send instructions:</h1>
 
         <h2>Send crane configuration</h2>
         <label for="x-coord">Lift height (mm)</label>
@@ -35,16 +35,17 @@
 
         <button id="coord-send">Send</button>
 
-        <h3>(optional) Control 4-DOF signal</h3>
-        <label for="crane-x-coord">Crane x (m)</label> <br>
-        <input type="number" id="crane-x-coord" value="0" step=".1" /> <br>
-        <label for="crane-y-coord">Crane y (m)</label> <br>
-        <input type="number" id="crane-y-coord" value="0" step=".1" /> <br>
-        <label for="crane-z-coord">Crane z (m)</label> <br>
-        <input type="number" id="crane-z-coord" value="0" step=".1" /> <br>
-        <label for="crane-z-rot">Crane y-rotation (deg)</label> <br>
-        <input type="number" id="crane-z-rot" value="0" step=".1" /> <br>
-        <button id="sensor-send">Unavailable</button>
+        <h3>(optional) Control 4-DOF speed</h3>
+        <label for="speed-x">Speed x (mm/s)</label> <br>
+        <input type="number" id="speed-x" value="0" step=".1" /> <br>
+        <label for="speed-y">Speed y (mm/s)</label> <br>
+        <input type="number" id="speed-y" value="0" step=".1" /> <br>
+        <label for="speed-z">Speed z (mm/s)</label> <br>
+        <input type="number" id="speed-z" value="0" step=".1" /> <br>
+        <label for="speed-y-rot">Speed y-rotation (deg/s)</label> <br>
+        <input type="number" id="speed-y-rot" value="0" step=".1" /> <br>
+
+        <button id="speed-send">Send</button>
 
     </div>
     <div id="canvas-div">

@@ -8,6 +8,7 @@
 
 class Updater {
     static constexpr int64_t MESSAGE_RATE_NANOS = 50'000'000;
+    static constexpr int64_t SECOND_IN_NANOS = 1'000'000'000;
 
 public:
     Updater(frontend::WebsocketServer& server);

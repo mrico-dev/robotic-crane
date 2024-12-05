@@ -58,19 +58,19 @@ struct CranePhysics {
 
 struct CraneMovementConfig {
     float lift_elevation_max_speed_;  // millimeters / s
-    float lift_elevation_acceleration_;  // millimeters / s
+    float lift_elevation_acceleration_;  // millimeters / s^2
 
     float swing_rotation_max_speed_;  // degrees / s
-    float swing_rotation_acceleration_;  // degrees / s
+    float swing_rotation_acceleration_;  // degrees / s^2
 
     float elbow_rotation_max_speed_;  // degrees / s
-    float elbow_rotation_acceleration_;  // degrees / s
+    float elbow_rotation_acceleration_;  // degrees / s^2
 
     float wrist_rotation_max_speed_;  // degrees / s
-    float wrist_rotation_acceleration_;  // degrees / s
+    float wrist_rotation_acceleration_;  // degrees / s^2
 
     float grip_extension_max_speed_;  // millimeters / s
-    float grip_extension_acceleration_;  // millimeters / s
+    float grip_extension_acceleration_;  // millimeters / s^2
 };
 
 struct CraneShapeConfig {
@@ -93,6 +93,13 @@ struct PolarPosition {
     float radius_;
     float angle_;
     float y_;
+};
+
+struct CraneSpeed {
+    float speed_x_;  // millimiters / s
+    float speed_y_;  // millimiters / s
+    float speed_z_;  // millimiters / s
+    float speed_y_rotation_;  // degree / s
 };
 
 static constexpr simulation::CraneMovementConfig default_crane_movement_config = simulation::CraneMovementConfig{

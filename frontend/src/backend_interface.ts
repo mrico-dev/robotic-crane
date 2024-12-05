@@ -34,6 +34,14 @@ interface CraneFrontendMessage {
     grip_extension: number,
 }
 
+interface DOF4SpeedFrontendMessage {
+    type: string,
+    speed_x: number,
+    speed_y: number,
+    speed_z: number,
+    speed_rot_y: number,
+}
+
 function messageHandler(event: any): void {
     const jsonData = event.data;
     console.log('Message from server:', jsonData);
@@ -100,6 +108,24 @@ export function setup_button(): void {
 
         const json: string = JSON.stringify(message);
         console.log("Sending message: ", json);
+        socket.send(json);
+    });
+
+    // Send speed
+    const xSpeedInput: HTMLInputElement = document.getElementById('speed-x') as HTMLInputElement;
+    const ySpeedInput: HTMLInputElement = document.getElementById('speed-y') as HTMLInputElement;
+    const zSpeedInput: HTMLInputElement = document.getElementById('speed-z') as HTMLInputElement;
+    const yRotSpeedInput: HTMLInputElement = document.getElementById('speed-y-rot') as HTMLInputElement;
+
+    document.getElementById("speed-send")?.addEventListener("click", () => {
+        const xSpeed: number = parseFloat(xSpeedInput.value);
+        const ySpeed: number = parseFloat(ySpeedInput.value);
+        const zSpeed: number = parseFloat(zSpeedInput.value);
+        const yRotSpeed: number = parseFloat(yRotSpeedInput.value);
+
+        const message: DOF4SpeedFrontendMessage = {type: "4dof-speed", speed_x: xSpeed, speed_y: ySpeed, speed_z: zSpeed, speed_rot_y: yRotSpeed};
+        const json: string = JSON.stringify(message);
+        console.log("Sending message: ", message);
         socket.send(json);
     });
 }
