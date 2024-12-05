@@ -7,10 +7,11 @@ namespace simulation
 {
     constexpr float PI = 3.141592653589793238462643383279502884;
 
-    CranePlanner::CranePlanner(const CraneShapeConfig &config): config_(config) {}
+    CranePlanner::CranePlanner(const CraneShapeConfig &config): config_(config), crane_position_{0, 0, 0, 0} {}
 
     Crane simulation::CranePlanner::get_target_crane(const Position& pos) {
-        const auto polar_pos = get_polar_coords(pos);
+        auto relative_pos = Position{pos.x_ - crane_position_.x_, pos.y_ - crane_position_.y_, pos.z_ - crane_position_.z_};
+        const auto polar_pos = get_polar_coords(relative_pos);
         const auto triangle_length = polar_pos.radius_ - config_.wrist_length_;
 
         if (config_.arm_length_ + config_.forearm_length_ < triangle_length) {
@@ -21,7 +22,7 @@ namespace simulation
             std::cerr << "Requested position is too close to the crane. Going back to default position instead." << std::endl;
             return Crane::default_crane();
         }
-        auto lift = pos.y_ + config_.elbow_spacing_y_ + config_.wrist_spacing_y_;
+        auto lift = relative_pos.y_ + config_.elbow_spacing_y_ + config_.wrist_spacing_y_;
         if (lift > config_.lift_height_) {
             std::cerr << "Requested position is too high. Going back to default position instead." << std::endl;
             return Crane::default_crane();
@@ -35,11 +36,11 @@ namespace simulation
         const auto swing_angle = std::acos((a * a + c * c - b * b) / (2 * a * c));
         const auto elbow_rotation = -PI + std::acos((a * a + b * b - c * c) / (2 * a * b));
         const auto wrist_rotation = -swing_angle - elbow_rotation;
-        const auto swing_rotation = swing_angle + polar_pos.angle_;
+        const auto swing_rotation_deg = rad_to_degrees(swing_angle + polar_pos.angle_) - crane_position_.rotation_;
 
         auto grip = 150.f;
 
-        return Crane{lift, rad_to_degrees(swing_rotation), rad_to_degrees(elbow_rotation), rad_to_degrees(wrist_rotation), grip};
+        return Crane{lift, swing_rotation_deg, rad_to_degrees(elbow_rotation), rad_to_degrees(wrist_rotation), grip};
     }
 
     PolarPosition CranePlanner::get_polar_coords(const Position &pos) {
@@ -51,6 +52,10 @@ namespace simulation
 
     float CranePlanner::rad_to_degrees(float rad) {
         return rad * 180 / PI;
+    }
+
+    void CranePlanner::set_crane_position(const CranePosition &pos) {
+        crane_position_ = pos;
     }
 
 } // namespace simulation
