@@ -5,7 +5,8 @@
 Updater::Updater(frontend::WebsocketServer& server):
     server_(server),
     simulator_(simulation::Crane::default_crane(), simulation::default_crane_movement_config),
-    planner_(simulation::default_crane_shape_config) {
+    planner_(simulation::default_crane_shape_config),
+    crane_position_sensor_() {
         auto callback = std::bind(&Updater::handle_crane_target_msg, this, std::placeholders::_1);
         server_.set_message_handler(callback);
     }
@@ -21,7 +22,8 @@ void Updater::loop_send_positions() {
             auto lock = std::lock_guard<std::mutex>(mutex_);
             simulator_.simulate_next_step(std::max(duration, MESSAGE_RATE_NANOS));
         }
-        server_.send_all(make_json(simulator_.get_state()));
+        auto crane_pos = crane_position_sensor_.get_crane_position();
+        server_.send_all(make_json(simulator_.get_state(), crane_pos));
 
         auto time_end = std::chrono::system_clock::now().time_since_epoch().count();
         duration = time_end - time_begin;
@@ -31,13 +33,17 @@ void Updater::loop_send_positions() {
     }
 }
 
-std::string Updater::make_json(const simulation::Crane& crane) {
+std::string Updater::make_json(const simulation::Crane& crane, const simulation::CranePosition& crane_pos) {
     // Note: jsoncpp could save us the trouble but this is fine
     return "{\"liftHeight\": " + std::to_string(crane.lift_elevation_) +
             ",\"liftArmAngleDegree\": " + std::to_string(crane.swing_rotation_) +
             ",\"armForearmAngleDegree\": " + std::to_string(crane.elbow_rotation_) +
             ",\"forearmGripAngleDegree\": " + std::to_string(crane.wrist_rotation_) +
             ",\"gripperSpacing\": " + std::to_string(crane.grip_extension_) +
+            ",\"craneX\": " + std::to_string(crane_pos.x_) +
+            ",\"craneY\": " + std::to_string(crane_pos.y_) +
+            ",\"craneZ\": " + std::to_string(crane_pos.z_) +
+            ",\"craneRot\": " + std::to_string(crane_pos.rotation_) +
             "}";
 }
 

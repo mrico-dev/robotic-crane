@@ -45,6 +45,7 @@ var forearmGripPivot: THREE.Object3D;
 var gripLeft: THREE.Mesh;
 var gripRight: THREE.Mesh;
 
+var baseAxisLine: THREE.Line;
 var armForearmAxisLine: THREE.Line;
 var forearmGripAxisLine: THREE.Line;
 
@@ -140,7 +141,7 @@ export function build_scene(): void {
     new THREE.Vector3(0, MIN_CANVAS_HEIGHT, 0),
     new THREE.Vector3(0, MAX_CANVAS_HEIGHT, 0),
   ]); 
-  const baseAxisLine: THREE.Line = new THREE.Line(baseAxisGeometry, new THREE.LineBasicMaterial({ color: 0xff0000 }));
+  baseAxisLine = new THREE.Line(baseAxisGeometry, new THREE.LineBasicMaterial({ color: 0xff0000 }));
   scene.add(baseAxisLine);
 
   var armForearmPivotWorldPos: THREE.Vector3 = new THREE.Vector3(); 
@@ -177,6 +178,12 @@ export function build_scene(): void {
 }
 
 function refreshAxis(): void {
+  var baseWorldPos: THREE.Vector3 = new THREE.Vector3(); 
+  base.getWorldPosition(baseWorldPos);
+  baseAxisLine.geometry.attributes.position.setXYZ(0, baseWorldPos.x, MIN_CANVAS_HEIGHT, baseWorldPos.z);
+  baseAxisLine.geometry.attributes.position.setXYZ(1, baseWorldPos.x, MAX_CANVAS_HEIGHT, baseWorldPos.z);
+  baseAxisLine.geometry.attributes.position.needsUpdate = true;
+
   var armForearmPivotWorldPos: THREE.Vector3 = new THREE.Vector3(); 
   armForearmPivot.getWorldPosition(armForearmPivotWorldPos);
   armForearmAxisLine.geometry.attributes.position.setXYZ(0, armForearmPivotWorldPos.x, MIN_CANVAS_HEIGHT, armForearmPivotWorldPos.z);
@@ -231,6 +238,15 @@ export function setGoalPoint(x: number, y: number, z: number): void {
   goalPoint.position.y = y;
   goalPoint.position.z = -z;
   goalPoint.updateMatrixWorld();
+}
+
+export function setCranePostion(x: number, y: number, z: number, rotation: number): void {
+  base.position.x = x;
+  base.position.y = y;
+  base.position.z = z;
+  base.rotation.y = degToRad(rotation);
+  refreshAxis();
+  base.updateMatrixWorld();
 }
 
 window.addEventListener('resize', (): void => {

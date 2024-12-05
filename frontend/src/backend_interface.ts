@@ -12,6 +12,10 @@ interface BackendMessage {
     armForearmAngleDegree: number, 
     forearmGripAngleDegree: number,
     gripperSpacing: number,
+    craneX: number,
+    craneY: number,
+    craneZ: number,
+    craneRot: number,
 }
 
 interface CoordFrontendMessage {
@@ -48,6 +52,7 @@ function set_crane_position(position: BackendMessage): void {
     VISUALIZER.setArmForearmAngle(position.armForearmAngleDegree);
     VISUALIZER.setForearmGripAngle(position.forearmGripAngleDegree);
     VISUALIZER.setGripperSpacing(position.gripperSpacing / 1000);
+    VISUALIZER.setCranePostion(position.craneX / 1000, position.craneY / 1000, position.craneZ / 1000, position.craneRot);
 }
 
 export function setup_button(): void {

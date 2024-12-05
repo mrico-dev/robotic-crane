@@ -32,7 +32,7 @@ struct Crane {
         wrist_rotation_ = std::fmod(wrist_rotation_, 360);
     }
 
-    float lift_elevation_;  // milimeters
+    float lift_elevation_;  // millimeters
     float swing_rotation_;  // degrees
     float elbow_rotation_;  // degrees
     float wrist_rotation_;  // degrees
@@ -41,8 +41,15 @@ struct Crane {
     static const auto default_crane() { return Crane{5000, 0, 0, 0, 500}; }
 };
 
+struct CranePosition {
+    float x_;  // millimeters
+    float y_;  // millimeters
+    float z_;  // millimeters
+    float rotation_; // degrees
+};
+
 struct CranePhysics {
-    float lift_elevation_speed_;  // milimeters / s
+    float lift_elevation_speed_;  // millimeters / s
     float swing_rotation_speed_;  // degrees / s
     float elbow_rotation_speed_;  // degrees / s
     float wrist_rotation_speed_;  // degrees / s
@@ -50,8 +57,8 @@ struct CranePhysics {
 };
 
 struct CraneMovementConfig {
-    float lift_elevation_max_speed_;  // milimeters / s
-    float lift_elevation_acceleration_;  // milimeters / s
+    float lift_elevation_max_speed_;  // millimeters / s
+    float lift_elevation_acceleration_;  // millimeters / s
 
     float swing_rotation_max_speed_;  // degrees / s
     float swing_rotation_acceleration_;  // degrees / s
@@ -62,8 +69,8 @@ struct CraneMovementConfig {
     float wrist_rotation_max_speed_;  // degrees / s
     float wrist_rotation_acceleration_;  // degrees / s
 
-    float grip_extension_max_speed_;  // milimeters / s
-    float grip_extension_acceleration_;  // milimeters / s
+    float grip_extension_max_speed_;  // millimeters / s
+    float grip_extension_acceleration_;  // millimeters / s
 };
 
 struct CraneShapeConfig {
