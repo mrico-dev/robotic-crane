@@ -234,15 +234,15 @@ export function setGripperSpacing(newGripperSpacing : number): void {
 }
 
 export function setGoalPoint(x: number, y: number, z: number): void {
-  goalPoint.position.x = x + base.position.x;
-  goalPoint.position.y = y + base.position.y - BASE_HEIGHT / 2;
-  goalPoint.position.z = -z + base.position.z;
+  goalPoint.position.x = x;
+  goalPoint.position.y = y;
+  goalPoint.position.z = -z;
   goalPoint.updateMatrixWorld();
 }
 
 export function setCranePostion(x: number, y: number, z: number, rotation: number): void {
   base.position.x = x;
-  base.position.y = y;
+  base.position.y = y + BASE_HEIGHT / 2;
   base.position.z = z;
   base.rotation.y = degToRad(rotation);
   refreshAxis();

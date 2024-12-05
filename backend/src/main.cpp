@@ -11,7 +11,7 @@ int main(void) {
     server.run();
 
     Updater updater(server);
-    updater.loop_send_positions();
+    updater.loop();
 
     std::cout << "Main loop done." << std::endl;
 }

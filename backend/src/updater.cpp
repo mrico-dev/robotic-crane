@@ -11,18 +11,28 @@ Updater::Updater(frontend::WebsocketServer& server):
         server_.set_message_handler(callback);
     }
 
-void Updater::loop_send_positions() {
+void Updater::loop() {
     simulation::Crane crane(8'000, 90, -90, 20, 100);
     long duration = 0;
 
     while (true) {
         auto time_begin = std::chrono::system_clock::now().time_since_epoch().count();
 
-        {
-            auto lock = std::lock_guard<std::mutex>(mutex_);
-            simulator_.simulate_next_step(std::max(duration, MESSAGE_RATE_NANOS));
-        }
         auto crane_pos = crane_position_sensor_.get_next_crane_position(static_cast<double>(duration) / SECOND_IN_NANOS);
+        std::optional<simulation::Crane> new_crane_goal = std::nullopt;
+        if (target_position_.has_value()) {
+            planner_.set_crane_position(crane_pos);
+            new_crane_goal = planner_.get_target_crane(*target_position_);
+        }
+
+        {  // begin locking
+            auto lock = std::lock_guard<std::mutex>(mutex_);
+            if (new_crane_goal.has_value()) {
+                simulator_.set_goal_state(*new_crane_goal);
+            }
+            simulator_.simulate_next_step(std::max(duration, MESSAGE_RATE_NANOS));
+        }  // end locking
+
         server_.send_all(make_json(simulator_.get_state(), crane_pos));
 
         auto time_end = std::chrono::system_clock::now().time_since_epoch().count();
@@ -62,7 +72,6 @@ Json::Value parse_json(const std::string &msg) {
 
 void Updater::handle_crane_target_msg(const std::string &msg) {
     std::cout << "Received message: " << msg << std::endl;
-    simulation::Crane goal_crane = simulation::Crane();
 
     try {
         auto values = parse_json(msg);
@@ -71,9 +80,7 @@ void Updater::handle_crane_target_msg(const std::string &msg) {
             const auto y = values["y"].asFloat();
             const auto z = values["z"].asFloat();
 
-            const auto position = simulation::Position{x, y, z};
-            goal_crane = planner_.get_target_crane(position);
-
+            target_position_ = simulation::Position{x, y, z};
         } else if (values["type"].asString() == "crane") {
             const auto lift_height = values["lift_elevation"].asFloat();
             const auto swing_roation = values["swing_rotation"].asFloat();
@@ -81,7 +88,13 @@ void Updater::handle_crane_target_msg(const std::string &msg) {
             const auto wrist_rotation = values["wrist_rotation"].asFloat();
             const auto grip_extension = values["grip_extension"].asFloat();
 
-            goal_crane = simulation::Crane(lift_height, swing_roation, elbow_rotation, wrist_rotation, grip_extension);
+            auto goal_crane = simulation::Crane(lift_height, swing_roation, elbow_rotation, wrist_rotation, grip_extension);
+            target_position_ = std::nullopt;
+            goal_crane.normalize_angle();
+            {
+                auto lock = std::lock_guard<std::mutex>(mutex_);
+                simulator_.set_goal_state(goal_crane);
+            }
 
         } else if (values["type"].asString() == "4dof-speed") {
             const auto crane_speed_x = values["speed_x"].asFloat();
@@ -91,23 +104,10 @@ void Updater::handle_crane_target_msg(const std::string &msg) {
 
             const auto crane_speed = simulation::CraneSpeed{crane_speed_x, crane_speed_y, crane_speed_z, crane_rot_speed_y};            
             crane_position_sensor_.set_crane_speed(crane_speed);
-            return;
         } else {
             throw std::runtime_error("Received message with unknown type: '" + values["type"].asString() + "'");
         }
     } catch (std::exception& e) {
         throw std::runtime_error("Received message which is malformed or missing elements: " + std::string(e.what()) + ". Message is '" + msg + "'");
-    }
-
-    std::cout << "GOAL CRANE IS: " << goal_crane.lift_elevation_ 
-            << " | " << goal_crane.swing_rotation_ 
-            << " | " << goal_crane.elbow_rotation_
-            << " | " << goal_crane.wrist_rotation_
-            << " | " << goal_crane.grip_extension_ << std::endl;
-
-    goal_crane.normalize_angle();
-    {
-        auto lock = std::lock_guard<std::mutex>(mutex_);
-        simulator_.set_goal_state(goal_crane);
     }
 }
